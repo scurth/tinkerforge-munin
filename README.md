@@ -21,12 +21,7 @@ Create symlink for your devices (run as root)
     
     munin-node-configure --suggest --shell
 
-#Create list of threshold keys (run as root)
-#
-#    /usr/share/munin/plugins/TF_TemperatureIR_ suggest env >> /etc/munin/plugin-conf.d/tinkerforge
-#    /usr/share/munin/plugins/TF_Moisture_ suggest env >> /etc/munin/plugin-conf.d/tinkerforge
-#
-#Afterwards you need to set to proper values for these keys, according to your needs.
+You may want to create warning/critical threshold for your measurements as well.
 
 ## Notes
 ---
