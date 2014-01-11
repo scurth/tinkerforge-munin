@@ -93,23 +93,3 @@ if __name__ == "__main__":
             print "%s.value %s" % (sensor,getattr(deviceobject, varname)()/DIVIDE_BY)
 
 
-"""
-        print '%s.label %s' % (measurementtype,measurementtype)
-        varname="%s.draw" % measurementtype
-        if os.environ.get(varname) is None:
-            draw='LINE1'
-        else:
-            draw=os.environ.get(varname)
-        print '%s.draw %s' % (measurementtype,draw)
-        varname="%s.type" % measurementtype
-        if os.environ.get(varname) is None:
-            mtype='GAUGE'
-        else:
-            mtype=os.environ.get(varname)
-        print '%s.type %s' % (measurementtype,mtype)
-        for thresholdtype in ["warning","critical"]:
-            varname="%s.%s" % (measurementtype,thresholdtype)
-            if os.environ.get(varname) is not None:
-                print '%s %s' % (varname,os.environ.get(varname)) 
-
-"""
