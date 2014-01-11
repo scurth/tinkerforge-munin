@@ -67,8 +67,6 @@ if __name__ == "__main__":
         # Trigger Enumerate
         ipcon.enumerate()
 
-        # Close connection
-        ipcon.disconnect()
     elif len(sys.argv) == 2 and sys.argv[1] == "config":
         print 'graph_title %s' % (scriptname)
         print 'graph_vlabel %s' % VLABEL
@@ -93,3 +91,5 @@ if __name__ == "__main__":
             print "%s.value %s" % (sensor,getattr(deviceobject, varname)()/DIVIDE_BY)
 
 
+    # Close connection
+    ipcon.disconnect()
