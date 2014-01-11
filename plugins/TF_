@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+HOST = "localhost"
+PORT = 4223
+
+import sys
+import os
+import time
+from tinkerforge.ip_connection import IPConnection
+
+scriptname=os.path.basename(__file__)
+monitor_uid=scriptname.partition('_')[2].partition('_')[0]
+device_identifier=scriptname.partition('_')[2].partition('_')[2]
+
+# Print incoming enumeration
+def cb_enumerate_devices(uid, connected_uid, position, hardware_version, firmware_version, device_identifier, enumeration_type):
+    if enumeration_type == IPConnection.ENUMERATION_TYPE_DISCONNECTED:
+        print("")
+        return
+    print "%s_%s" % (uid,device_identifier) 
+
+if __name__ == "__main__":
+    # Create connection and connect to brickd
+    ipcon = IPConnection()
+    ipcon.connect(HOST, PORT)
+
+    # settings
+    DIVIDE_BY=10
+    if device_identifier == "13":
+        from tinkerforge.brick_master import Master
+        PYFILE="brick_master"
+        VLABEL="Master"
+        DIVIDE_BY=1000
+        MEASUREMENT=["mV","mA"]
+        SENSORS=["stack_voltage","stack_current"]
+    elif device_identifier == "21":
+        from tinkerforge.bricklet_ambient_light import AmbientLight
+        PYFILE="ambient_light"
+        VLABEL="AmbientLight"
+        MEASUREMENT=["lux"]
+        SENSORS=["illuminance"]
+    elif device_identifier == "216":
+        from tinkerforge.bricklet_temperature import Temperature
+        PYFILE="temperature"
+        VLABEL="Temperature"
+        DIVIDE_BY=100
+        MEASUREMENT=["C"]
+        SENSORS=["temperature"]
+    elif device_identifier == "217":
+        from tinkerforge.bricklet_temperature_ir import TemperatureIR
+        PYFILE="temperature_ir"
+        VLABEL="TemperatureIR"
+        MEASUREMENT=["C","C"]
+        SENSORS=["object_temperature","ambient_temperature"]
+
+    if len(sys.argv) == 2 and sys.argv[1] == "autoconf":
+        #Magic markers for munin autoconf
+        #%# family=auto
+        #%# capabilities=autoconf suggest
+        print "yes"
+
+    elif len(sys.argv) >= 2 and sys.argv[1] == "suggest":
+        ipcon.register_callback(IPConnection.CALLBACK_ENUMERATE, cb_enumerate_devices)
+        # Without sleep not all devices are always present
+        time.sleep(1)
+        # Trigger Enumerate
+        ipcon.enumerate()
+
+        # Close connection
+        ipcon.disconnect()
+    elif len(sys.argv) == 2 and sys.argv[1] == "config":
+        print 'graph_title %s' % (scriptname)
+        print 'graph_vlabel %s' % VLABEL
+        print 'graph_category tinkerforge'
+
+        for i in range(0,len(SENSORS)):
+            print '%s.label %s in %s' % (SENSORS[i],SENSORS[i],MEASUREMENT[i])
+            varname="%s_%s.draw" % (monitor_uid,device_identifier)
+            if os.environ.get(varname) is None:
+                draw='LINE1'
+            else:
+                draw=os.environ.get(varname)
+            print '%s.draw %s' % (SENSORS[i],draw)
+            for thresholdtype in ["warning","critical"]:
+                varname="%s_%s.%s" % (monitor_uid,device_identifier,thresholdtype)
+                if os.environ.get(varname) is not None:
+                    print '%s %s' % (varname,os.environ.get(varname)) 
+    else:
+        deviceobject = eval(VLABEL)(monitor_uid, ipcon)
+        for sensor in SENSORS:
+            varname='get_%s' % sensor
+            print "%s.value %s" % (sensor,getattr(deviceobject, varname)()/DIVIDE_BY)
+
+
+"""
+        print '%s.label %s' % (measurementtype,measurementtype)
+        varname="%s.draw" % measurementtype
+        if os.environ.get(varname) is None:
+            draw='LINE1'
+        else:
+            draw=os.environ.get(varname)
+        print '%s.draw %s' % (measurementtype,draw)
+        varname="%s.type" % measurementtype
+        if os.environ.get(varname) is None:
+            mtype='GAUGE'
+        else:
+            mtype=os.environ.get(varname)
+        print '%s.type %s' % (measurementtype,mtype)
+        for thresholdtype in ["warning","critical"]:
+            varname="%s.%s" % (measurementtype,thresholdtype)
+            if os.environ.get(varname) is not None:
+                print '%s %s' % (varname,os.environ.get(varname)) 
+
+"""
