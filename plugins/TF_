@@ -26,7 +26,7 @@ if __name__ == "__main__":
     ipcon.connect(HOST, PORT)
 
     # settings
-    DIVIDE_BY=10
+    DIVIDE_BY=10.0
     if device_identifier == "13":
         from tinkerforge.brick_master import Master
         PYFILE="brick_master"
