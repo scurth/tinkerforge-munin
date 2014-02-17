@@ -44,7 +44,7 @@ if __name__ == "__main__":
         from tinkerforge.bricklet_temperature import Temperature
         PYFILE="temperature"
         VLABEL="Temperature"
-        DIVIDE_BY=100
+        DIVIDE_BY=100.0
         MEASUREMENT=["C"]
         SENSORS=["temperature"]
     elif device_identifier == "217":
