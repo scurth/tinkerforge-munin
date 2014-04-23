@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-HOST = "localhost"
-PORT = 4223
-
 import sys
 import os
 import time
 from tinkerforge.ip_connection import IPConnection
+
+HOST = os.getenv("host","localhost")
+PORT = os.getenv("port",4223)
 
 scriptname=os.path.basename(__file__)
 monitor_uid=scriptname.partition('_')[2].partition('_')[0]
