@@ -8,6 +8,7 @@ from tinkerforge.ip_connection import IPConnection
 
 HOST = os.getenv("host","localhost")
 PORT = os.getenv("port",4223)
+TIMEOUT = os.getenv("timeout",None)
 
 scriptname=os.path.basename(__file__)
 monitor_uid=scriptname.partition('_')[2].partition('_')[0]
@@ -23,6 +24,8 @@ def cb_enumerate_devices(uid, connected_uid, position, hardware_version, firmwar
 if __name__ == "__main__":
     # Create connection and connect to brickd
     ipcon = IPConnection()
+    if TIMEOUT != None:
+        ipcon.set_timeout(TIMEOUT)
     ipcon.connect(HOST, PORT)
 
     # settings
