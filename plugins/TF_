@@ -40,6 +40,13 @@ if __name__ == "__main__":
         VLABEL="AmbientLight"
         MEASUREMENT=["lux"]
         SENSORS=["illuminance"]
+    elif device_identifier == "27":
+        from tinkerforge.bricklet_humidity import Humidity
+        PYFILE="humidity"
+        VLABEL="Humidity"
+        MEASUREMENT=["%"]
+        SENSORS=["humidity"]
+        DIVIDE_BY=10.0
     elif device_identifier == "216":
         from tinkerforge.bricklet_temperature import Temperature
         PYFILE="temperature"
