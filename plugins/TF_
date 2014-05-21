@@ -69,10 +69,11 @@ if __name__ == "__main__":
 
     elif len(sys.argv) >= 2 and sys.argv[1] == "suggest":
         ipcon.register_callback(IPConnection.CALLBACK_ENUMERATE, cb_enumerate_devices)
-        # Without sleep not all devices are always present
-        time.sleep(1)
         # Trigger Enumerate
         ipcon.enumerate()
+        # Without sleep the enumeration callback has not enough time to also
+        # enumerate devices further away (RS485, Chibi...)
+        time.sleep(2)
 
     elif len(sys.argv) == 2 and sys.argv[1] == "config":
         print 'graph_title %s' % (scriptname)
