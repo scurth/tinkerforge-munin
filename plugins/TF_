@@ -47,7 +47,7 @@ if __name__ == "__main__":
         from tinkerforge.bricklet_humidity import Humidity
         PYFILE="humidity"
         VLABEL="Humidity"
-        MEASUREMENT=["%"]
+        MEASUREMENT=["%RH"]
         SENSORS=["humidity"]
         DIVIDE_BY=10.0
     elif device_identifier == "216":
@@ -63,6 +63,13 @@ if __name__ == "__main__":
         VLABEL="TemperatureIR"
         MEASUREMENT=["C","C"]
         SENSORS=["object_temperature","ambient_temperature"]
+    elif device_identifier == "227":
+        from tinkerforge.bricklet_voltage_current import VoltageCurrent
+        PYFILE="voltage_current"
+        VLABEL="VoltageCurrent"
+        MEASUREMENT=["Current","Voltage"]
+        SENSORS=["current","voltage"]
+        DIVIDE_BY=1000.00
     elif device_identifier == "229":
         from tinkerforge.bricklet_distance_us import DistanceUS
         PYFILE="distance_us"
@@ -70,6 +77,12 @@ if __name__ == "__main__":
         MEASUREMENT=["mm"]
         SENSORS=["distance_value"]
         DIVIDE_BY=2
+    elif device_identifier == "232":
+        from tinkerforge.bricklet_moisture import Moisture
+        PYFILE="moisture"
+        VLABEL="Moisture"
+        MEASUREMENT=["%"]
+        SENSORS=["moisture_value"]
 
     if len(sys.argv) == 2 and sys.argv[1] == "autoconf":
         #Magic markers for munin autoconf
